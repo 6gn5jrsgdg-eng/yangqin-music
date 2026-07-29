@@ -89,7 +89,6 @@ body { font-family: var(--font-body); color: var(--text); background: var(--crea
 .anatomy-yangqin { position: relative; width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, #F5E6D3, #E8D5B0); border-radius: var(--radius-sm); overflow: hidden; border: 3px solid var(--gold); }
 .anatomy-yangqin .trapezoid { position: absolute; inset: 10%; background: linear-gradient(180deg, #D4A76A, #C4955A); clip-path: polygon(8% 0%, 92% 0%, 98% 100%, 2% 100%); }
 .anatomy-yangqin .bridge-row { position: absolute; left: 15%; right: 15%; height: 3px; background: var(--dark); border-radius: 2px; opacity: 0.7; }
-.anatomy-yangqin .bridge-row:nth-child(1){top:25%} .anatomy-yangqin .bridge-row:nth-child(2){top:42%} .anatomy-yangqin .bridge-row:nth-child(3){top:59%} .anatomy-yangqin .bridge-row:nth-child(4){top:76%}
 .anatomy-labels { flex: 1; min-width: 300px; display: grid; gap: 0.75rem; align-content: start; }
 .anatomy-label { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1.2rem; background: var(--white); border-radius: var(--radius-sm); box-shadow: 0 2px 8px rgba(44,24,16,0.06); transition: var(--transition); cursor: default; }
 .anatomy-label:hover { transform: translateX(6px); box-shadow: var(--shadow); }
@@ -97,12 +96,12 @@ body { font-family: var(--font-body); color: var(--text); background: var(--crea
 .anatomy-label .info h4 { font-size: 0.95rem; color: var(--dark); }
 .anatomy-label .info p { font-size: 0.8rem; color: var(--text-light); }
 
-/* ========== Virtual Yangqin - REALISTIC ========== */
+/* ========== Virtual Yangqin - REALISTIC (2-Bridge Horizontal Layout) ========== */
 .virtual-section { background: linear-gradient(180deg, var(--cream) 0%, #F5E6D3 100%); padding: 5rem 2rem; }
 .virtual-inner { max-width: 1100px; margin: 0 auto; }
 .yangqin-player { background: var(--white); border-radius: var(--radius); padding: 2.5rem 2rem 2rem; box-shadow: var(--shadow-lg); }
 
-/* Realistic Yangqin Body - Trapezoid */
+/* Realistic Yangqin Body - Horizontal Trapezoid (narrow left, wide right) */
 .yangqin-stage {
   position: relative;
   width: 100%;
@@ -114,22 +113,21 @@ body { font-family: var(--font-body); color: var(--text); background: var(--crea
 .yangqin-frame {
   position: relative;
   width: 100%;
-  /* Trapezoid: narrow top, wide bottom (as seen from player perspective) */
-  aspect-ratio: 2.6 / 1.4;
+  aspect-ratio: 2.6 / 1.2;
   background: linear-gradient(180deg, #7A4420 0%, #5C3216 50%, #7A4420 100%);
   border-radius: 6px;
-  /* Real trapezoid shape */
-  clip-path: polygon(6% 0%, 94% 0%, 100% 100%, 0% 100%);
+  /* Trapezoid: narrow LEFT, wide RIGHT (player sits at narrow end) */
+  clip-path: polygon(0% 6%, 100% 0%, 100% 100%, 0% 94%);
   box-shadow: 0 12px 40px rgba(92,50,22,0.4), inset 0 2px 6px rgba(255,255,255,0.15);
-  padding: 14px 30px 14px;
+  padding: 14px 14px 14px 30px;
 }
 
 .yangqin-frame::before {
   content: '';
   position: absolute;
-  inset: 8px 24px 8px;
+  inset: 8px 8px 8px 24px;
   background: linear-gradient(180deg, var(--wood-panel) 0%, var(--wood-panel-dark) 50%, var(--wood-panel) 100%);
-  clip-path: polygon(4% 0%, 96% 0%, 100% 100%, 0% 100%);
+  clip-path: polygon(0% 4%, 100% 0%, 100% 100%, 0% 96%);
   border-radius: 4px;
   box-shadow: inset 0 0 20px rgba(139,90,43,0.3);
 }
@@ -138,10 +136,10 @@ body { font-family: var(--font-body); color: var(--text); background: var(--crea
 .yangqin-frame::after {
   content: '';
   position: absolute;
-  inset: 8px 24px 8px;
-  background: repeating-linear-gradient(90deg, transparent 0px, transparent 18px, rgba(139,90,43,0.08) 18px, rgba(139,90,43,0.08) 19px),
-              repeating-linear-gradient(0deg, transparent 0px, transparent 40px, rgba(139,90,43,0.04) 40px, rgba(139,90,43,0.04) 41px);
-  clip-path: polygon(4% 0%, 96% 0%, 100% 100%, 0% 100%);
+  inset: 8px 8px 8px 24px;
+  background: repeating-linear-gradient(0deg, transparent 0, transparent 14px, rgba(139,90,43,0.06) 14px, rgba(139,90,43,0.06) 15px),
+              repeating-linear-gradient(90deg, transparent 0, transparent 24px, rgba(139,90,43,0.04) 24px, rgba(139,90,43,0.04) 25px);
+  clip-path: polygon(0% 4%, 100% 0%, 100% 100%, 0% 96%);
   border-radius: 4px;
   pointer-events: none;
 }
@@ -152,51 +150,100 @@ body { font-family: var(--font-body); color: var(--text); background: var(--crea
   height: 100%;
   z-index: 1;
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 6px 0;
+  flex-direction: row;
+  align-items: stretch;
+  padding: 0 6px;
 }
 
-/* Bridge (琴码) - wooden bar holding strings, with peak shape */
-.bridge {
+/* Zone labels */
+.zone-label {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  white-space: nowrap;
+}
+
+/* ===== Zone areas (3 playing zones) ===== */
+.yangqin-zone {
   position: relative;
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  height: 22px;
-  margin: 0 4%;
-  z-index: 1;
+  padding: 8px 2px;
+  z-index: 2;
 }
 
-.bridge-bar {
+.zone-high {
+  flex: 0 0 22%;
+  min-width: 0;
+}
+
+.zone-mid {
+  flex: 0 0 32%;
+  min-width: 0;
+}
+
+.zone-low {
+  flex: 0 0 28%;
+  min-width: 0;
+}
+
+/* ===== Bridge (琴码) - vertical wooden bars perpendicular to strings ===== */
+.yangqin-bridge {
+  position: relative;
+  flex: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+  min-width: 18px;
+}
+
+.bridge-body {
   position: absolute;
-  left: 0; right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 16px;
-  background: linear-gradient(180deg, #6B3A1E 0%, #4A2510 30%, #3D1F0A 50%, #4A2510 70%, #6B3A1E 100%);
+  top: 6%;
+  bottom: 6%;
+  width: 14px;
+  background: linear-gradient(90deg, #6B3A1E 0%, #4A2510 30%, #3D1F0A 50%, #4A2510 70%, #6B3A1E 100%);
   border-radius: 3px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,200,150,0.15), inset 0 -1px 0 rgba(0,0,0,0.4);
-  z-index: 0;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,200,150,0.15), inset 0 -1px 0 rgba(0,0,0,0.4);
 }
 
-/* Bridge peak highlights - small notches where strings sit */
-.bridge-bar::before {
+.bridge-body::before {
   content: '';
   position: absolute;
-  left: 8%; right: 8%;
-  top: -3px;
-  height: 4px;
-  background: repeating-linear-gradient(90deg, transparent 0, transparent 20px, rgba(0,0,0,0.3) 20px, rgba(0,0,0,0.3) 22px, transparent 22px, transparent 42px);
+  top: 6%; bottom: 6%;
+  left: -3px;
+  width: 4px;
+  background: repeating-linear-gradient(0deg, transparent 0, transparent 14px, rgba(0,0,0,0.25) 14px, rgba(0,0,0,0.25) 16px, transparent 16px, transparent 30px);
   border-radius: 2px;
 }
 
-/* String hit point - where you strike */
+.bridge-label {
+  position: relative;
+  z-index: 1;
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.6);
+  font-weight: 600;
+  writing-mode: vertical-rl;
+  letter-spacing: 0.1em;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+/* ===== String hit point - where you strike ===== */
 .note-strike {
   position: relative;
   z-index: 2;
-  width: 42px;
-  height: 32px;
+  width: 44px;
+  height: 30px;
   background: rgba(255,255,255,0.12);
   border: 1.5px solid rgba(255,255,255,0.25);
   border-radius: 5px;
@@ -210,12 +257,13 @@ body { font-family: var(--font-body); color: var(--text); background: var(--crea
   transition: all 0.08s ease;
   user-select: none;
   text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  flex-shrink: 0;
 }
 
 .note-strike:hover {
   background: rgba(255,255,255,0.3);
   border-color: rgba(255,255,255,0.5);
-  transform: scale(1.12) translateY(-2px);
+  transform: scale(1.12);
 }
 
 .note-strike.active {
@@ -223,7 +271,7 @@ body { font-family: var(--font-body); color: var(--text); background: var(--crea
   border-color: rgba(255,230,120,1) !important;
   color: var(--dark);
   text-shadow: none;
-  transform: scale(1.2) translateY(-3px);
+  transform: scale(1.2);
   box-shadow: 0 0 24px rgba(255,210,80,0.7), 0 0 8px rgba(255,255,255,0.5);
 }
 
@@ -247,19 +295,19 @@ body { font-family: var(--font-body); color: var(--text); background: var(--crea
   letter-spacing: 0.05em;
 }
 
-/* Strings - thin lines crossing the panel */
+/* ===== Strings - horizontal lines across the panel ===== */
 .strings-overlay {
   position: absolute;
-  inset: 8px 24px 8px;
+  inset: 8px 8px 8px 24px;
   pointer-events: none;
   z-index: 0;
-  clip-path: polygon(4% 0%, 96% 0%, 100% 100%, 0% 100%);
+  clip-path: polygon(0% 4%, 100% 0%, 100% 100%, 0% 96%);
 }
 
 .string-line {
   position: absolute;
-  left: 6%;
-  right: 6%;
+  left: 0;
+  right: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(220,220,220,0.35) 10%, rgba(255,255,255,0.25) 50%, rgba(220,220,220,0.35) 90%, transparent);
 }
@@ -322,18 +370,7 @@ body { font-family: var(--font-body); color: var(--text); background: var(--crea
   50% { transform: rotate(8deg); }
 }
 
-/* Row label */
-.row-label {
-  position: absolute;
-  left: -10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.65rem;
-  color: rgba(255,255,255,0.4);
-  writing-mode: vertical-rl;
-  letter-spacing: 0.1em;
-  z-index: 3;
-}
+/* Hammer animation */
 
 /* Now playing indicator */
 .now-playing {
@@ -355,6 +392,36 @@ body { font-family: var(--font-body); color: var(--text); background: var(--crea
 }
 
 .now-playing.show { opacity: 1; }
+
+.sample-hint {
+  position: absolute;
+  top: -30px;
+  right: 10px;
+  background: var(--gold);
+  color: var(--dark);
+  padding: 0.2rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  z-index: 5;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+.sample-ready-hint {
+  position: absolute;
+  top: -30px;
+  right: 10px;
+  background: #4CAF50;
+  color: white;
+  padding: 0.2rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  z-index: 5;
+}
+@keyframes pulse {
+  0%,100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
 
 /* 播放进度条 */
 .play-progress {
@@ -778,10 +845,8 @@ body { font-family: var(--font-body); color: var(--text); background: var(--crea
     <div class="anatomy-visual">
       <div class="anatomy-yangqin">
         <div class="trapezoid"></div>
-        <div class="bridge-row" style="top:25%"></div>
-        <div class="bridge-row" style="top:42%"></div>
-        <div class="bridge-row" style="top:59%"></div>
-        <div class="bridge-row" style="top:76%"></div>
+        <div class="bridge-row" style="top:32%"></div>
+        <div class="bridge-row" style="top:62%"></div>
       </div>
     </div>
     <div class="anatomy-labels">
@@ -802,11 +867,13 @@ body { font-family: var(--font-body); color: var(--text); background: var(--crea
       <div class="section-tag">虚拟演奏</div>
       <h2 class="section-title">在线弹奏扬琴</h2>
       <div class="divider"></div>
-      <p class="section-desc">点击琴键或使用键盘演奏，体验真实扬琴的梯形琴身与琴码排列</p>
+      <p class="section-desc">点击琴键或使用键盘演奏，双排琴码三音区布局，还原真实扬琴结构</p>
     </div>
     <div class="yangqin-player">
       <div class="yangqin-stage">
         <div class="now-playing" id="nowPlaying"></div>
+        <div class="sample-hint" id="sampleLoadingHint">正在加载真实扬琴音色...</div>
+        <span class="sample-ready-hint" id="sampleReadyHint" style="display:none;">✓ 真实音色已就绪</span>
         <div class="bamboo-hammers">
           <div class="hammer left"></div>
           <div class="hammer right"></div>
@@ -1002,20 +1069,322 @@ navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', ()
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => { nav.style.boxShadow = window.scrollY > 50 ? '0 2px 20px rgba(44,24,16,0.1)' : 'none'; });
 
-// ==================== Audio Engine ====================
+// ==================== 扬琴采样音色引擎（真实录音样本）====================
+// 使用 FluidR3_GM 的 hammered dulcimer（击弦扬琴）真实采样
+// 双弦叠加（微失谐）+ 混响 + 自然衰减，还原真实扬琴音色
+// 采样不可用时自动回退到算法合成
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 let masterGain = null;
+let yangqinWave = null;
+
+// === 采样音色变量 ===
+let soundfontData = null;
+let sampledNotes = {};
+let samplesLoading = false;
+let samplesLoaded = false;
+
+// === 页面加载时预加载音色脚本（不需用户交互）===
+(function preloadSoundfont() {
+  var script = document.createElement('script');
+  script.src = 'https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/dulcimer-mp3.js';
+  script.onload = function() {
+    soundfontData = window.MIDI && window.MIDI.Soundfont && window.MIDI.Soundfont.dulcimer;
+    if (soundfontData) {
+      console.log('[音色] 采样数据已下载，共 ' + Object.keys(soundfontData).length + ' 个音符');
+      if (audioCtx) decodeSamples();
+    } else {
+      console.warn('[音色] 采样数据格式异常');
+    }
+  };
+  script.onerror = function() {
+    console.warn('[音色] 采样加载失败，使用合成音色');
+  };
+  document.head.appendChild(script);
+})();
+
+// === 频率 ↔ MIDI 转换 ===
+function freqToMidi(freq) {
+  return Math.round(69 + 12 * Math.log2(freq / 440));
+}
+
+function noteNameToMidi(name) {
+  var m = name.match(/^([A-G])(#?)(-?\d+)$/);
+  if (!m) return -1;
+  var map = {C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+  var n = map[m[1]] + (m[2]==='#'?1:0);
+  return (parseInt(m[3]) + 1) * 12 + n;
+}
+
+function base64ToArrayBuffer(b64) {
+  var bin = atob(b64);
+  var len = bin.length;
+  var bytes = new Uint8Array(len);
+  for (var i = 0; i < len; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes.buffer;
+}
+
+// === 解码采样为 AudioBuffer ===
+function decodeSamples() {
+  if (samplesLoading || samplesLoaded || !soundfontData || !audioCtx) return;
+  samplesLoading = true;
+  var keys = Object.keys(soundfontData);
+  var ok = 0, fail = 0;
+  var promises = keys.map(function(name) {
+    var b64 = soundfontData[name].split(',')[1];
+    if (!b64) return Promise.resolve();
+    return audioCtx.decodeAudioData(base64ToArrayBuffer(b64)).then(function(buf) {
+      var midi = noteNameToMidi(name);
+      if (midi >= 0) { sampledNotes[midi] = buf; ok++; }
+    }).catch(function() { fail++; });
+  });
+  Promise.all(promises).then(function() {
+    samplesLoaded = true;
+    samplesLoading = false;
+    console.log('[音色] 解码完成：成功' + ok + ' 失败' + fail);
+    var el = document.getElementById('sampleLoadingHint');
+    if (el) el.style.display = 'none';
+    var rdy = document.getElementById('sampleReadyHint');
+    if (rdy) { rdy.style.display = 'inline'; setTimeout(function(){ rdy.style.display='none'; }, 3000); }
+  });
+}
+
+// === 查找最近采样 ===
+function findClosestSample(midi) {
+  if (sampledNotes[midi]) return { buffer: sampledNotes[midi], midi: midi };
+  var best = -1, minD = Infinity;
+  for (var m in sampledNotes) {
+    var d = Math.abs(parseInt(m) - midi);
+    if (d < minD) { minD = d; best = parseInt(m); }
+  }
+  if (best >= 0 && minD <= 12) return { buffer: sampledNotes[best], midi: best };
+  return null;
+}
+
+// === 生成混响脉冲响应 ===
+function createReverbImpulse(ctx, dur, decay) {
+  var rate = ctx.sampleRate;
+  var len = Math.floor(rate * dur);
+  var impulse = ctx.createBuffer(2, len, rate);
+  for (var ch = 0; ch < 2; ch++) {
+    var data = impulse.getChannelData(ch);
+    for (var i = 0; i < len; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, decay);
+    }
+  }
+  return impulse;
+}
+
+// ==================== 扬琴音色合成（采样优先 + 合成后备）====================
+function synthesizeYangqin(ctx, freq, startTime, velocity, sustainTime, outputNode) {
+  var v = Math.max(0.10, Math.min(1.0, velocity));
+
+  // === 采样模式 ===
+  if (samplesLoaded) {
+    var midi = freqToMidi(freq);
+    var sample = findClosestSample(midi);
+    if (sample) {
+      var pitchRatio = Math.pow(2, (midi - sample.midi) / 12);
+      var freqRatio = Math.max(0.3, Math.min(3.0, 280 / freq));
+      var actualSustain = Math.max(0.3, sustainTime * (0.5 + freqRatio * 0.8));
+      var finalSustain = actualSustain * (0.75 + v * 0.35);
+
+      // 主弦
+      var s1 = ctx.createBufferSource();
+      s1.buffer = sample.buffer;
+      s1.playbackRate.value = pitchRatio;
+      var g1 = ctx.createGain();
+      g1.gain.setValueAtTime(0, startTime);
+      g1.gain.linearRampToValueAtTime(v * 0.55, startTime + 0.002);
+      g1.gain.exponentialRampToValueAtTime(v * 0.22, startTime + finalSustain * 0.2);
+      g1.gain.exponentialRampToValueAtTime(0.0002, startTime + finalSustain);
+      s1.connect(g1); g1.connect(outputNode);
+      s1.start(startTime); s1.stop(startTime + finalSustain + 0.1);
+
+      // 副弦（双弦微失谐 + 2ms延迟）
+      var s2 = ctx.createBufferSource();
+      s2.buffer = sample.buffer;
+      s2.playbackRate.value = pitchRatio * 1.0009;
+      var g2 = ctx.createGain();
+      g2.gain.setValueAtTime(0, startTime + 0.002);
+      g2.gain.linearRampToValueAtTime(v * 0.35, startTime + 0.005);
+      g2.gain.exponentialRampToValueAtTime(v * 0.14, startTime + finalSustain * 0.18);
+      g2.gain.exponentialRampToValueAtTime(0.0002, startTime + finalSustain * 0.9);
+      s2.connect(g2); g2.connect(outputNode);
+      s2.start(startTime + 0.002); s2.stop(startTime + finalSustain + 0.1);
+
+      var cleanupMs = (startTime - ctx.currentTime + finalSustain + 0.2) * 1000;
+      setTimeout(function() { try { g1.disconnect(); g2.disconnect(); } catch(e){} }, Math.max(200, cleanupMs));
+      return finalSustain;
+    }
+  }
+
+  // === 合成后备 ===
+  return synthesizeYangqinFallback(ctx, freq, startTime, v, sustainTime, outputNode);
+}
+
+// ==================== Audio Engine（合成后备方案）====================
+// 合成方案：自定义 PeriodicWave（真实谐波结构）+ 击弦噪声瞬态 + 动态低通（高频先衰）
 
 function getAudioContext() {
   if (!audioCtx) {
-    audioCtx = new AudioContext();
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 44100 }); }
+    catch(e) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    var nyquist = audioCtx.sampleRate / 2;
+
+    // === 预创建扬琴弦振动波形 ===
+    // 击弦的谐波结构：基频最强，高次谐波按 ~1/n 衰减但钢弦偏高
+    // real[0] = 0 (DC), imag[0] = 0
+    // 第 n 次谐波幅度 ≈ 1/(n^0.85) * 力度修正
+    var numHarmonics = 16;
+    var real = new Float32Array(numHarmonics + 1);
+    var imag = new Float32Array(numHarmonics + 1);
+    real[0] = 0;
+    imag[0] = 0;
+    for (var h = 1; h <= numHarmonics; h++) {
+      // 钢弦谐波：比理想弦衰减慢，高次谐波更丰富 → 清脆明亮
+      var amp = 1.0 / Math.pow(h, 0.82);
+      // 偶次谐波略强（双弦叠加效应）
+      if (h % 2 === 0) amp *= 1.15;
+      // 极高次谐波额外衰减（防止刺耳）
+      if (h > 10) amp *= 0.5;
+      imag[h] = amp;
+      real[h] = 0;
+    }
+    yangqinWave = audioCtx.createPeriodicWave(real, imag, { disableNormalization: false });
+
+    // === 总音量控制 ===
     masterGain = audioCtx.createGain();
-    masterGain.gain.value = 0.7;
-    masterGain.connect(audioCtx.destination);
+    masterGain.gain.value = 0.55;
+
+    // === 输出低通（温和高频限制，不截断） ===
+    var outFilter = audioCtx.createBiquadFilter();
+    outFilter.type = 'lowpass';
+    outFilter.frequency.value = Math.min(nyquist * 0.92, 9000);
+    outFilter.Q.value = 0.3;
+
+    // === 混响（模拟扬琴琴体共鸣空间感）===
+    var reverbConv = audioCtx.createConvolver();
+    reverbConv.buffer = createReverbImpulse(audioCtx, 1.5, 3.0);
+    var reverbGain = audioCtx.createGain();
+    reverbGain.gain.value = 0.15;
+
+    masterGain.connect(outFilter);           // 直达信号
+    masterGain.connect(reverbConv);          // 送入混响
+    reverbConv.connect(reverbGain);
+    reverbGain.connect(outFilter);           // 混响信号汇入
+    outFilter.connect(audioCtx.destination);
+
+    // === 解码采样音色（如果数据已下载）===
+    decodeSamples();
   }
   if (audioCtx.state === 'suspended') audioCtx.resume();
   return audioCtx;
+}
+
+// ==================== 合成后备方案（采样不可用时使用）====================
+function synthesizeYangqinFallback(ctx, freq, startTime, velocity, sustainTime, outputNode) {
+  var v = Math.max(0.10, Math.min(1.0, velocity));
+
+  // === 延音时长（频率自适应：低音长、高音短） ===
+  var freqRatio = Math.max(0.3, Math.min(3.0, 280 / freq));
+  var actualSustain = Math.max(0.25, sustainTime * (0.40 + freqRatio * 0.85));
+  var finalSustain = actualSustain * (0.72 + v * 0.40);
+
+  // === 第1部分：击弦瞬态（竹槌敲击声，2~5ms） ===
+  // 这是扬琴"颗粒性"的来源：极短的宽频噪声脉冲
+  var atkDur = 0.003 + v * 0.002;  // 3~5ms
+  var atkBufLen = Math.max(8, Math.round(ctx.sampleRate * atkDur));
+  var atkBuf = ctx.createBuffer(1, atkBufLen, ctx.sampleRate);
+  var atkData = atkBuf.getChannelData(0);
+  for (var i = 0; i < atkBufLen; i++) {
+    // 指数衰减的噪声脉冲
+    atkData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (atkBufLen * 0.3));
+  }
+  var atkSrc = ctx.createBufferSource();
+  atkSrc.buffer = atkBuf;
+  // 击弦噪声经过带通滤波（模拟竹槌敲击钢弦的频谱特征）
+  var atkBP = ctx.createBiquadFilter();
+  atkBP.type = 'bandpass';
+  atkBP.frequency.value = Math.min(ctx.sampleRate * 0.3, freq * 4);
+  atkBP.Q.value = 0.7;
+  var atkGain = ctx.createGain();
+  atkGain.gain.setValueAtTime(v * 0.15, startTime);
+  atkGain.gain.exponentialRampToValueAtTime(0.0003, startTime + atkDur);
+  atkSrc.connect(atkBP);
+  atkBP.connect(atkGain);
+  atkGain.connect(outputNode);
+  atkSrc.start(startTime);
+  atkSrc.stop(startTime + atkDur + 0.01);
+
+  // === 第2部分：弦振动（自定义波形 + 动态低通 + 两段衰减） ===
+  var detuneCents = 2.0 + v * 1.5;
+
+  // 弦1：主弦
+  var freq1 = freq * Math.pow(2, detuneCents / 1200);
+  var osc1 = ctx.createOscillator();
+  osc1.setPeriodicWave(yangqinWave);
+  osc1.frequency.setValueAtTime(freq1, startTime);
+
+  // 动态低通：起始亮（高频丰富），逐渐变暗（高频先衰减）
+  var filter1 = ctx.createBiquadFilter();
+  filter1.type = 'lowpass';
+  var cutoffStart = Math.min(ctx.sampleRate * 0.42, freq * 8 * (0.6 + v * 0.5));
+  var cutoffEnd = Math.max(freq * 1.5, cutoffStart * 0.15);
+  filter1.frequency.setValueAtTime(cutoffStart, startTime);
+  filter1.frequency.exponentialRampToValueAtTime(cutoffEnd, startTime + finalSustain * 0.6);
+  filter1.Q.value = 0.8;
+
+  // 两段衰减包络：快速初始衰减 + 慢速尾音
+  var gain1 = ctx.createGain();
+  gain1.gain.setValueAtTime(0, startTime);
+  gain1.gain.linearRampToValueAtTime(v * 0.35, startTime + 0.001);  // 极快攻击
+  // 第一段：快速衰减到 40%（前 15% 时长）
+  gain1.gain.exponentialRampToValueAtTime(v * 0.14, startTime + finalSustain * 0.15);
+  // 第二段：慢速衰减到静音
+  gain1.gain.exponentialRampToValueAtTime(0.0004, startTime + finalSustain);
+
+  osc1.connect(filter1);
+  filter1.connect(gain1);
+  gain1.connect(outputNode);
+  osc1.start(startTime);
+  osc1.stop(startTime + finalSustain + 0.05);
+
+  // 弦2：副弦（略弱 + 略短，制造厚度和拍音）
+  var freq2 = freq * Math.pow(2, -detuneCents / 1200);
+  var osc2 = ctx.createOscillator();
+  osc2.setPeriodicWave(yangqinWave);
+  osc2.frequency.setValueAtTime(freq2, startTime);
+
+  var filter2 = ctx.createBiquadFilter();
+  filter2.type = 'lowpass';
+  filter2.frequency.setValueAtTime(cutoffStart * 0.85, startTime);
+  filter2.frequency.exponentialRampToValueAtTime(cutoffEnd, startTime + finalSustain * 0.5);
+  filter2.Q.value = 0.6;
+
+  var gain2 = ctx.createGain();
+  gain2.gain.setValueAtTime(0, startTime);
+  gain2.gain.linearRampToValueAtTime(v * 0.28, startTime + 0.001);
+  gain2.gain.exponentialRampToValueAtTime(v * 0.10, startTime + finalSustain * 0.12);
+  gain2.gain.exponentialRampToValueAtTime(0.0004, startTime + finalSustain * 0.85);
+
+  osc2.connect(filter2);
+  filter2.connect(gain2);
+  gain2.connect(outputNode);
+  osc2.start(startTime);
+  osc2.stop(startTime + finalSustain + 0.05);
+
+  // === 清理 ===
+  var cleanupMs = (startTime - ctx.currentTime + finalSustain + 0.2) * 1000;
+  setTimeout(function() {
+    try {
+      atkGain.disconnect(); atkBP.disconnect();
+      gain1.disconnect(); filter1.disconnect();
+      gain2.disconnect(); filter2.disconnect();
+    } catch(e) {}
+  }, Math.max(200, cleanupMs));
+
+  return finalSustain;
 }
 
 // Note frequency table (C major scale across octaves)
@@ -1036,31 +1405,29 @@ function numberedToFreq(num, octave) {
   return NOTE_FREQ[noteName] || 261.63;
 }
 
-// ==================== Virtual Yangqin (Realistic) ====================
+// ==================== Virtual Yangqin (2-Bridge, 3-Zone) ====================
+// 3 playing zones: 高音区 (left of bridge 1), 中音区 (between bridges), 低音区 (right of bridge 2)
 const yangqinLayout = [
-  { name: '倍高音区', notes: [
+  { zone: 'high', name: '高音区', cls: 'zone-high', notes: [
     { label: 'C5', key: '1', freq: 523.25 }, { label: 'D5', key: '2', freq: 587.33 },
     { label: 'E5', key: '3', freq: 659.25 }, { label: 'F5', key: '4', freq: 698.46 },
     { label: 'G5', key: '5', freq: 783.99 }, { label: 'A5', key: '6', freq: 880.00 },
-    { label: 'B5', key: '7', freq: 987.77 }, { label: 'C6', key: '8', freq: 1046.50 }
+    { label: 'B5', key: '7', freq: 987.77 }, { label: 'C6', key: '8', freq: 1046.50 },
+    { label: 'D6', key: '9', freq: 1174.66 }, { label: 'E6', key: '0', freq: 1318.51 }
   ]},
-  { name: '高音区', notes: [
+  { zone: 'mid', name: '中音区', cls: 'zone-mid', notes: [
     { label: 'G4', key: 'Q', freq: 392.00 }, { label: 'A4', key: 'W', freq: 440.00 },
     { label: 'B4', key: 'E', freq: 493.88 }, { label: 'C5', key: 'R', freq: 523.25 },
     { label: 'D5', key: 'T', freq: 587.33 }, { label: 'E5', key: 'Y', freq: 659.25 },
-    { label: 'F5', key: 'U', freq: 698.46 }, { label: 'G5', key: 'I', freq: 783.99 }
+    { label: 'F5', key: 'U', freq: 698.46 }, { label: 'G5', key: 'I', freq: 783.99 },
+    { label: 'A5', key: 'O', freq: 880.00 }, { label: 'B5', key: 'P', freq: 987.77 }
   ]},
-  { name: '中音区', notes: [
-    { label: 'C4', key: 'A', freq: 261.63 }, { label: 'D4', key: 'S', freq: 293.66 },
-    { label: 'E4', key: 'D', freq: 329.63 }, { label: 'F4', key: 'F', freq: 349.23 },
-    { label: 'G4', key: 'G', freq: 392.00 }, { label: 'A4', key: 'H', freq: 440.00 },
-    { label: 'B4', key: 'J', freq: 493.88 }, { label: 'C5', key: 'K', freq: 523.25 }
-  ]},
-  { name: '低音区', notes: [
-    { label: 'G3', key: 'Z', freq: 196.00 }, { label: 'A3', key: 'X', freq: 220.00 },
-    { label: 'B3', key: 'C', freq: 246.94 }, { label: 'C4', key: 'V', freq: 261.63 },
-    { label: 'D4', key: 'B', freq: 293.66 }, { label: 'E4', key: 'N', freq: 329.63 },
-    { label: 'F4', key: 'M', freq: 349.23 }, { label: 'G4', key: ',', freq: 392.00 }
+  { zone: 'low', name: '低音区', cls: 'zone-low', notes: [
+    { label: 'G3', key: 'A', freq: 196.00 }, { label: 'A3', key: 'S', freq: 220.00 },
+    { label: 'B3', key: 'D', freq: 246.94 }, { label: 'C4', key: 'F', freq: 261.63 },
+    { label: 'D4', key: 'G', freq: 293.66 }, { label: 'E4', key: 'H', freq: 329.63 },
+    { label: 'F4', key: 'J', freq: 349.23 }, { label: 'G4', key: 'K', freq: 392.00 },
+    { label: 'A4', key: 'Z', freq: 440.00 }, { label: 'B4', key: 'X', freq: 493.88 }
   ]}
 ];
 
@@ -1069,19 +1436,23 @@ const yangqinInner = document.getElementById('yangqinInner');
 const stringsOverlay = document.getElementById('stringsOverlay');
 const allNoteElements = {};
 
-yangqinLayout.forEach((row, rowIndex) => {
-  const bridgeDiv = document.createElement('div');
-  bridgeDiv.className = 'bridge';
-  const bar = document.createElement('div');
-  bar.className = 'bridge-bar';
-  bridgeDiv.appendChild(bar);
-  
-  const label = document.createElement('div');
-  label.className = 'row-label';
-  label.textContent = row.name;
-  bridgeDiv.appendChild(label);
+// Clear existing content
+yangqinInner.innerHTML = '';
 
-  row.notes.forEach((noteData) => {
+// Render zones and bridges
+yangqinLayout.forEach((zoneData, zoneIdx) => {
+  // Create zone container
+  const zoneDiv = document.createElement('div');
+  zoneDiv.className = 'yangqin-zone ' + zoneData.cls;
+
+  // Zone label
+  const zoneLabel = document.createElement('div');
+  zoneLabel.className = 'zone-label';
+  zoneLabel.textContent = zoneData.name;
+  zoneDiv.appendChild(zoneLabel);
+
+  // Create note elements
+  zoneData.notes.forEach((noteData) => {
     const noteEl = document.createElement('div');
     noteEl.className = 'note-strike';
     noteEl.dataset.freq = noteData.freq;
@@ -1089,26 +1460,41 @@ yangqinLayout.forEach((row, rowIndex) => {
     noteEl.innerHTML = `${noteData.label}<span class="key-hint">${noteData.key}</span>`;
     noteEl.addEventListener('mousedown', (e) => { e.preventDefault(); playNote(noteData.freq, noteEl); });
     noteEl.addEventListener('touchstart', (e) => { e.preventDefault(); playNote(noteData.freq, noteEl); });
-    bridgeDiv.appendChild(noteEl);
+    zoneDiv.appendChild(noteEl);
     allNoteElements[noteData.label] = noteEl;
-    // Also map by frequency for melody playback
     allNoteElements['freq_' + noteData.freq] = noteEl;
   });
-  yangqinInner.appendChild(bridgeDiv);
+
+  yangqinInner.appendChild(zoneDiv);
+
+  // Add bridge after zone 0 and zone 1 (not after last)
+  if (zoneIdx < yangqinLayout.length - 1) {
+    const bridgeDiv = document.createElement('div');
+    bridgeDiv.className = 'yangqin-bridge';
+    const bridgeBody = document.createElement('div');
+    bridgeBody.className = 'bridge-body';
+    bridgeDiv.appendChild(bridgeBody);
+    const bridgeLabel = document.createElement('div');
+    bridgeLabel.className = 'bridge-label';
+    bridgeLabel.textContent = zoneIdx === 0 ? '高音琴码' : '低音琴码';
+    bridgeDiv.appendChild(bridgeLabel);
+    yangqinInner.appendChild(bridgeDiv);
+  }
 });
 
-// Draw strings (visual decoration)
-for (let i = 0; i < 20; i++) {
+// Draw strings (visual decoration) - horizontal lines
+stringsOverlay.innerHTML = '';
+for (let i = 0; i < 24; i++) {
   const string = document.createElement('div');
   string.className = 'string-line';
-  string.style.top = (10 + i * 4) + '%';
+  string.style.top = (4 + i * 4) + '%';
   stringsOverlay.appendChild(string);
 }
 
 // Build keyboard map
 const keyMap = {};
-yangqinLayout.forEach(row => {
-  row.notes.forEach(n => { keyMap[n.key.toLowerCase()] = n; });
+yangqinLayout.forEach(zone => {
+  zone.notes.forEach(n => { keyMap[n.key.toLowerCase()] = n; });
 });
 
 // Play a note
@@ -1119,22 +1505,21 @@ function playNote(freq, element) {
   const timbre = document.getElementById('timbreSelect').value;
   const sustain = document.getElementById('sustainSlider').value / 100;
   const sustainTime = 0.5 + sustain * 2.5;
-  
-  const gainNode = ctx.createGain();
-  gainNode.connect(masterGain);
-  gainNode.gain.setValueAtTime(volume * 0.5, now);
-  gainNode.gain.exponentialRampToValueAtTime(0.001, now + sustainTime);
 
   if (timbre === 'yangqin') {
-    const osc1 = ctx.createOscillator(); osc1.type = 'triangle'; osc1.frequency.setValueAtTime(freq, now); osc1.connect(gainNode);
-    const osc2 = ctx.createOscillator(); osc2.type = 'sine'; osc2.frequency.setValueAtTime(freq*2, now);
-    const g2 = ctx.createGain(); g2.gain.setValueAtTime(0.25, now); g2.gain.exponentialRampToValueAtTime(0.001, now+sustainTime*0.7); osc2.connect(g2); g2.connect(masterGain);
-    const osc3 = ctx.createOscillator(); osc3.type = 'sine'; osc3.frequency.setValueAtTime(freq*3.01, now);
-    const g3 = ctx.createGain(); g3.gain.setValueAtTime(0.12, now); g3.gain.exponentialRampToValueAtTime(0.001, now+sustainTime*0.5); osc3.connect(g3); g3.connect(masterGain);
-    const osc4 = ctx.createOscillator(); osc4.type = 'triangle'; osc4.frequency.setValueAtTime(freq*0.999, now);
-    const g4 = ctx.createGain(); g4.gain.setValueAtTime(0.2, now); g4.gain.exponentialRampToValueAtTime(0.001, now+sustainTime*0.6); osc4.connect(g4); g4.connect(masterGain);
-    [osc1,osc2,osc3,osc4].forEach(o => { o.start(now); o.stop(now+sustainTime); });
+    // 使用真实扬琴音色合成引擎
+    const noteGain = ctx.createGain();
+    noteGain.gain.value = volume;
+    noteGain.connect(masterGain);
+    // 手动弹奏时加入轻微随机力度变化，模拟真实演奏
+    const velocity = 0.65 + Math.random() * 0.15;
+    synthesizeYangqin(ctx, freq, now, velocity, sustainTime, noteGain);
+    setTimeout(() => { try { noteGain.disconnect(); } catch(e){} }, (sustainTime + 0.5) * 1000);
   } else if (timbre === 'bell') {
+    const gainNode = ctx.createGain();
+    gainNode.connect(masterGain);
+    gainNode.gain.setValueAtTime(volume * 0.5, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + sustainTime);
     const harmonics = [1,2,3,4,5.2,6.8];
     harmonics.forEach((mult, i) => {
       const osc = ctx.createOscillator(); osc.type = i===0?'triangle':'sine'; osc.frequency.setValueAtTime(freq*mult, now);
@@ -1142,6 +1527,10 @@ function playNote(freq, element) {
       osc.connect(g); g.connect(masterGain); osc.start(now); osc.stop(now+sustainTime);
     });
   } else {
+    const gainNode = ctx.createGain();
+    gainNode.connect(masterGain);
+    gainNode.gain.setValueAtTime(volume * 0.5, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + sustainTime);
     const osc1 = ctx.createOscillator(); osc1.type = 'triangle'; osc1.frequency.setValueAtTime(freq, now); osc1.connect(gainNode);
     const osc2 = ctx.createOscillator(); osc2.type = 'sine'; osc2.frequency.setValueAtTime(freq*2, now);
     const g2 = ctx.createGain(); g2.gain.setValueAtTime(0.15, now); g2.gain.exponentialRampToValueAtTime(0.001, now+sustainTime*0.4); osc2.connect(g2); g2.connect(masterGain);
@@ -5005,7 +5394,100 @@ playPauseBtn.addEventListener('click', () => {
 });
 
 
-function playMelodyNote(freq, startTime, duration) {
+// ==================== 智能力度系统 ====================
+// 预计算整首曲子的力度曲线，模拟真实演奏的表情变化
+function precomputeDynamics(melody) {
+  const total = melody.length;
+  const velocities = new Array(total);
+
+  // 1. 识别乐句（以休止符或长音为分界）
+  const phrases = [];
+  let phraseStart = 0;
+  for (let i = 0; i < total; i++) {
+    const note = melody[i];
+    const isRest = !note || note.n === 0 || note.n == null;
+    const isLongNote = note && note.d >= 800;
+    const isLast = (i === total - 1);
+    if (isRest || isLongNote || isLast) {
+      const phraseEnd = isRest ? i - 1 : i;
+      if (phraseEnd >= phraseStart) {
+        phrases.push({ start: phraseStart, end: phraseEnd });
+      }
+      phraseStart = i + 1;
+    }
+  }
+
+  // 2. 为每个音符计算力度
+  for (let i = 0; i < total; i++) {
+    const note = melody[i];
+    if (!note || note.n === 0 || note.n == null) {
+      velocities[i] = 0;
+      continue;
+    }
+
+    let vel = 0.62;
+
+    // 整体音乐弧线：开头柔和，中段饱满（峰值约60%处），结尾渐弱
+    const posRatio = total > 1 ? i / (total - 1) : 0.5;
+    const arcShape = Math.sin(posRatio * Math.PI * 0.83 + 0.1);
+    vel += arcShape * 0.18;
+
+    // 找到当前音符所在乐句及句内位置
+    let curPhrase = null;
+    let phrasePos = 0.5;
+    for (const p of phrases) {
+      if (i >= p.start && i <= p.end) {
+        curPhrase = p;
+        phrasePos = p.end > p.start ? (i - p.start) / (p.end - p.start) : 0.5;
+        break;
+      }
+    }
+
+    // 乐句内部弧线：句首稍弱→句中峰值→句尾渐弱（呼吸感）
+    if (curPhrase) {
+      const phraseArc = Math.sin(phrasePos * Math.PI);
+      vel += phraseArc * 0.12;
+    }
+
+    // 节拍重音：4拍一组，强拍重，弱拍轻
+    if (curPhrase) {
+      let beatCount = 0;
+      for (let j = curPhrase.start; j <= i; j++) {
+        if (melody[j] && melody[j].n !== 0 && melody[j].n != null) beatCount++;
+      }
+      const beatPos = (beatCount - 1) % 4;
+      if (beatPos === 0) vel += 0.08;
+      else if (beatPos === 2) vel += 0.03;
+      else vel -= 0.02;
+    }
+
+    // 音符时值：长音稍强（需延音支撑），短音稍弱（轻巧）
+    const dur = note.d || 400;
+    if (dur >= 800) vel += 0.06;
+    else if (dur <= 300) vel -= 0.04;
+
+    // 休止后的首音：轻微强调（新乐句起音呼吸）
+    if (i > 0) {
+      const prev = melody[i - 1];
+      if (!prev || prev.n === 0 || prev.n == null) vel += 0.05;
+    }
+
+    // 休止前的尾音：渐弱（乐句收束呼吸）
+    if (i < total - 1) {
+      const next = melody[i + 1];
+      if (!next || next.n === 0 || next.n == null) vel -= 0.06;
+    }
+
+    // 高潮段落高音区：中段高音加强
+    if (note.o >= 1 && posRatio > 0.3 && posRatio < 0.8) vel += 0.04;
+
+    velocities[i] = Math.max(0.30, Math.min(0.95, vel));
+  }
+
+  return velocities;
+}
+
+function playMelodyNote(freq, startTime, duration, velocity) {
   try {
     const ctx = getAudioContext();
     const volume = document.getElementById('volumeSlider').value / 100;
@@ -5013,35 +5495,18 @@ function playMelodyNote(freq, startTime, duration) {
     const noteDur = (duration || 400) / 1000;
     const sustainTime = Math.min(0.5 + sustain * 2.0, Math.max(0.1, noteDur * 0.9 + 0.3));
 
-    const gainNode = ctx.createGain();
-    gainNode.connect(masterGain);
-    gainNode.gain.setValueAtTime(0, startTime);
-    gainNode.gain.linearRampToValueAtTime(volume * 0.5, startTime + 0.005);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + sustainTime);
+    // 每个音符独立gain节点，控制整体音量
+    const noteGain = ctx.createGain();
+    noteGain.gain.value = volume;
+    noteGain.connect(masterGain);
 
-    // 2个oscillator平衡性能与音色
-    const osc1 = ctx.createOscillator();
-    osc1.type = 'triangle';
-    osc1.frequency.setValueAtTime(freq, startTime);
-    osc1.connect(gainNode);
+    // 使用真实扬琴音色合成引擎（含力度响应），返回实际延音时长
+    const actualSustain = synthesizeYangqin(ctx, freq, startTime, velocity || 0.65, sustainTime, noteGain);
 
-    const osc2 = ctx.createOscillator();
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(freq * 2, startTime);
-    const g2 = ctx.createGain();
-    g2.gain.setValueAtTime(0.2, startTime);
-    g2.gain.exponentialRampToValueAtTime(0.001, startTime + sustainTime * 0.6);
-    osc2.connect(g2);
-    g2.connect(masterGain);
-
-    osc1.start(startTime);
-    osc2.start(startTime);
-    osc1.stop(startTime + sustainTime);
-    osc2.stop(startTime + sustainTime);
-
-    // 自动清理节点
-    osc1.onended = () => { try { osc1.disconnect(); gainNode.disconnect(); } catch(e){} };
-    osc2.onended = () => { try { osc2.disconnect(); g2.disconnect(); } catch(e){} };
+    // 自动清理：必须从音符的startTime开始计算，而非当前时间
+    // 否则提前调度的音符还没播放就被断开了
+    const delayFromStart = (startTime - ctx.currentTime + actualSustain + 0.5) * 1000;
+    setTimeout(() => { try { noteGain.disconnect(); } catch(e){} }, Math.max(500, delayFromStart));
   } catch(e) {
     console.error('音符播放错误:', e);
   }
@@ -5152,6 +5617,9 @@ function togglePlayMelody(id, btn) {
   }
   const totalPlaySec = accTime;
 
+  // 预计算力度曲线（智能力度系统：乐句呼吸+节拍重音+整体弧线+渐强渐弱）
+  const dynamicsArray = precomputeDynamics(item.melody);
+
   function scheduler() {
     if (playingId !== id) return;
     if (isPaused) return;
@@ -5170,7 +5638,7 @@ function togglePlayMelody(id, btn) {
           try {
             const freq = numberedToFreq(note.n, note.o);
             if (freq && freq > 0) {
-              playMelodyNote(freq, nextNoteTimeRef, noteDurMs);
+              playMelodyNote(freq, nextNoteTimeRef, noteDurMs, dynamicsArray[melodyIndex]);
 
               // 记录用于UI高亮（限制数组大小，只保留最近100个）
               if (scheduledNotes.length < 100) {
@@ -5345,7 +5813,7 @@ function stopMelody() {
     b.classList.remove('playing');
     b.textContent = '▶ 试听';
   });
-  document.querySelectorAll('.yangqin-note.playing').forEach(el => el.classList.remove('playing'));
+  document.querySelectorAll('.note-strike.playing').forEach(el => el.classList.remove('playing'));
   nowPlaying.classList.remove('show');
   playProgress.classList.remove('show');
   playProgress.querySelector('.play-progress-fill').style.width = '0%';
@@ -5491,7 +5959,7 @@ renderRepertoire();
 
 console.log('🎵 扬琴学堂已就绪！');
 console.log('  虚拟扬琴: 点击琴键或键盘演奏');
-console.log('  键盘映射: ZXCVBNM, / ASDFGHJK / QWERTYUI / 12345678');
+console.log('  键盘映射: 高音区 1234567890 / 中音区 QWERTYUIOP / 低音区 ASDFGHJKZX');
 console.log('  曲库: 16首经典曲目(10首传统+6首流行)，点击试听自动演奏');
 </script>
 </body>
